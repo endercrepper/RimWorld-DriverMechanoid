@@ -51,14 +51,16 @@
         <BypassUsableWeapons/>
       </li>
       <!-- HumanlikeMechExtension: required by Fortified.HumanlikeMech. The headGraphic
-           reuses the soldat body texture (which includes a head). bodyTypeOverride
-           Male matches the soldat's frame. -->
+           is required to prevent an NRE in HumanlikeMech.HeadGraphic. Using the soldat
+           texture with a tiny drawSize (0.01) so the head node is effectively invisible —
+           the body graphic from the PawnKindDef lifeStages handles the visible body,
+           and the apparel render nodes (enabled by HumanlikeMech) draw the exosuit. -->
       <li Class="Fortified.HumanlikeMechExtension">
         <bodyTypeOverride>Male</bodyTypeOverride>
         <headGraphic>
           <texPath>Things/Automatroid/soldat</texPath>
           <graphicClass>Graphic_Multi</graphicClass>
-          <drawSize>1.1</drawSize>
+          <drawSize>0.01</drawSize>
         </headGraphic>
       </li>
     </modExtensions>

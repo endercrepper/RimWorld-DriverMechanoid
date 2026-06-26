@@ -180,29 +180,36 @@ namespace DMS_DriverMechanoid
                         postfix: new HarmonyMethod(typeof(DriverPatches), nameof(DriverPatches.ApparelWear_Postfix)));
                     Log.Message("[DMS Driver Mechanoid] Patched Wear (prefix + postfix).");
                 }
+
+                // Prevent the Mech Pilot from REMOVING exosuit apparel to inventory.
+                // The exosuit should only be removable via the EjectorBay, not stripped
+                // or manually dropped. Patch TryDrop and Remove.
+                MethodInfo tryDrop = AccessTools.Method(typeof(Pawn_ApparelTracker), "TryDrop",
+                    new[] { typeof(Apparel), typeof(Thing), typeof(bool).MakeByRefType() });
+                if (tryDrop != null)
+                {
+                    harmony.Patch(tryDrop, prefix: new HarmonyMethod(typeof(DriverPatches), nameof(DriverPatches.ApparelTryDrop_Remove_Prefix)));
+                }
+                MethodInfo remove = AccessTools.Method(typeof(Pawn_ApparelTracker), "Remove",
+                    new[] { typeof(Apparel) });
+                if (remove != null)
+                {
+                    harmony.Patch(remove, prefix: new HarmonyMethod(typeof(DriverPatches), nameof(DriverPatches.ApparelTryDrop_Remove_Prefix)));
+                }
+                Log.Message("[DMS Driver Mechanoid] Patched TryDrop + Remove (block exosuit removal from Mech Pilot).");
             }
             catch (Exception e) { Log.Warning($"[DMS Driver Mechanoid] Exosuit patch skipped: {e.Message}"); }
         }
 
         public static void PatchPilotingAbility(Harmony harmony)
         {
-            try
-            {
-                FieldInfo pilotingField = AccessTools.Field(typeof(StatDefOf), "PilotingAbility");
-                if (pilotingField == null || pilotingField.GetValue(null) == null) return;
-
-                // Patch SkillRecord.Level — mechs have mechFixedSkillLevel=8 but
-                // SkillRecord.Level returns 0-1, so the PilotingAbility skill multiplier
-                // is ~0.28x. This postfix returns mechFixedSkillLevel for Driver variants
-                // when the skill is Intellectual, fixing the multiplier.
-                MethodInfo levelGetter = AccessTools.Property(typeof(SkillRecord), "Level")?.GetGetMethod(nonPublic: true);
-                if (levelGetter != null)
-                {
-                    harmony.Patch(levelGetter, postfix: new HarmonyMethod(typeof(DriverPatches), nameof(DriverPatches.SkillRecordLevel_Postfix)));
-                    Log.Message("[DMS Driver Mechanoid] Patched SkillRecord.Level.");
-                }
-            }
-            catch (Exception e) { Log.Warning($"[DMS Driver Mechanoid] PilotingAbility patch skipped: {e.Message}"); }
+            // PilotingAbility is now handled entirely via XML statBases with
+            // compensated values (0.5 for 10%, 3.5 for 70%). The stat has a
+            // consistent 0.2x multiplier for mechs (skill + health), so:
+            //   0.5 * 0.2 = 0.1  (10%)
+            //   3.5 * 0.2 = 0.7  (70%)
+            // No C# stat patching needed.
+            Log.Message("[DMS Driver Mechanoid] PilotingAbility handled via XML statBases (0.5 / 3.5).");
         }
 
         public static void PatchMechControlRange(Harmony harmony)
@@ -499,21 +506,46 @@ namespace DMS_DriverMechanoid
             return false;
         }
 
-        // ---- PilotingAbility: SkillRecord.Level ----
+        // ---- Prevent exosuit removal from Mech Pilot ----
 
-        public static void SkillRecordLevel_Postfix(SkillRecord __instance, ref int __result)
+        /// <summary>
+        ///   Prefix for Pawn_ApparelTracker.TryDrop and Remove.
+        ///   Blocks removal of exosuit apparel from the Mech Pilot — the exosuit
+        ///   should only be removable via the EjectorBay, not stripped or dropped.
+        /// </summary>
+        public static bool ApparelTryDrop_Remove_Prefix(Pawn_ApparelTracker __instance, Apparel ap)
         {
-            if (__instance == null || __instance.def == null) return;
-            if (__instance.def != SkillDefOf.Intellectual) return;
-            try
+            if (__instance == null || ap == null) return true;
+            Pawn pawn = __instance.pawn;
+            if (pawn == null || pawn.def == null || pawn.def.defName != "DMS_Mech_MechPilot") return true;
+
+            Type exosuitCoreType = AccessTools.TypeByName("Exosuit.Exosuit_Core");
+            if (exosuitCoreType == null) return true;
+            if (exosuitCoreType.IsInstanceOfType(ap)) return false;
+
+            Type compSuitModuleType = AccessTools.TypeByName("Exosuit.CompSuitModule");
+            if (compSuitModuleType != null)
             {
-                Pawn pawn = AccessTools.Field(typeof(SkillRecord), "pawn")?.GetValue(__instance) as Pawn;
-                if (pawn == null || pawn.def == null) return;
-                if (!IsDriverPawn(pawn)) return;
-                int fixedLevel = pawn.RaceProps.mechFixedSkillLevel;
-                if (fixedLevel > 0 && __result < fixedLevel) __result = fixedLevel;
+                try
+                {
+                    MethodInfo tryGetComp = AccessTools.Method(typeof(ThingCompUtility), "TryGetComp",
+                        new[] { typeof(ThingWithComps), compSuitModuleType });
+                    if (tryGetComp != null && tryGetComp.Invoke(null, new object[] { ap }) != null) return false;
+                }
+                catch { }
             }
-            catch { }
+
+            Type noGenderExtType = AccessTools.TypeByName("Exosuit.NoGenederApparelExt");
+            if (noGenderExtType != null)
+            {
+                try
+                {
+                    var ext = ap.def.modExtensions?.Find(e => e != null && noGenderExtType.IsInstanceOfType(e));
+                    if (ext != null) return false;
+                }
+                catch { }
+            }
+            return true;
         }
 
         // ---- Mech control range ----

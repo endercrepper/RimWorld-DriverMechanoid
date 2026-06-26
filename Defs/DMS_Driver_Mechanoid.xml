@@ -25,7 +25,7 @@
       <BandwidthCost MayRequire="Ludeon.Rimworld.Biotech">1</BandwidthCost>
       <WastepacksPerRecharge MayRequire="Ludeon.Rimworld.Biotech">2</WastepacksPerRecharge>
       <MarketValue>1200</MarketValue>
-      <PilotingAbility MayRequire="Ludeon.RimWorld.Odyssey">0.1</PilotingAbility>
+      <PilotingAbility MayRequire="Ludeon.RimWorld.Odyssey">0.5</PilotingAbility>
     </statBases>
     <modExtensions>
       <!-- Fortified weapon framework: restrict the Driver to basic pistols only. -->

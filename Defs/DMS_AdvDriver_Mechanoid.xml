@@ -14,7 +14,7 @@
       <MarketValue>2200</MarketValue>
       <AimingAccuracy>0.85</AimingAccuracy>
       <ShootingAccuracyPawn>1.1</ShootingAccuracyPawn>
-      <PilotingAbility MayRequire="Ludeon.RimWorld.Odyssey">0.7</PilotingAbility>
+      <PilotingAbility MayRequire="Ludeon.RimWorld.Odyssey">3.5</PilotingAbility>
     </statBases>
     <modExtensions>
       <li Class="Fortified.MechWeaponExtension">
