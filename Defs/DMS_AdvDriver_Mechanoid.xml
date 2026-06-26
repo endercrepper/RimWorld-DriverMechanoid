@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <ThingDef ParentName="BaseMechRace_Soldat">
+    <defName>DMS_Mech_AdvDriver</defName>
+    <label>advanced driver</label>
+    <description>An upgraded Driver automatoid built on the Soldat chassis with Nara Industries' humanoid-engineering package. Its enhanced cognition core handles Vehicle Framework vehicles with greater precision, and its hardened frame and improved sensor suite let it serve as a gravship pilot. Like the base Driver it is restricted to sidearms and carries a battery backpack.</description>
+    <statBases>
+      <BandwidthCost MayRequire="Ludeon.Rimworld.Biotech">2</BandwidthCost>
+      <WastepacksPerRecharge MayRequire="Ludeon.Rimworld.Biotech">2</WastepacksPerRecharge>
+      <MoveSpeed>4.6</MoveSpeed>
+      <ArmorRating_Sharp>0.55</ArmorRating_Sharp>
+      <ArmorRating_Blunt>0.3</ArmorRating_Blunt>
+      <ArmorRating_Heat>2.0</ArmorRating_Heat>
+      <MarketValue>2200</MarketValue>
+      <AimingAccuracy>0.85</AimingAccuracy>
+      <ShootingAccuracyPawn>1.1</ShootingAccuracyPawn>
+      <PilotingAbility MayRequire="Ludeon.RimWorld.Odyssey">0.7</PilotingAbility>
+    </statBases>
+    <modExtensions>
+      <li Class="Fortified.MechWeaponExtension">
+        <EnableWeaponFilter>true</EnableWeaponFilter>
+        <UsableWeaponTags>
+          <li>Autopistol</li>
+          <li>Revolver</li>
+          <li>DMS_MechWeaponLight</li>
+        </UsableWeaponTags>
+        <EnableTechLevelFilter>true</EnableTechLevelFilter>
+        <UsableTechLevels>
+          <li>Neolithic</li>
+          <li>Medieval</li>
+          <li>Industrial</li>
+          <li>Spacer</li>
+        </UsableTechLevels>
+        <BypassUsableWeapons/>
+      </li>
+    </modExtensions>
+  </ThingDef>
+
+  <PawnKindDef ParentName="BaseAutomatroidKind">
+    <defName>DMS_Mech_AdvDriver</defName>
+    <label>advanced driver</label>
+    <race>DMS_Mech_AdvDriver</race>
+    <isFighter>true</isFighter>
+    <combatPower>70</combatPower>
+    <maxPerGroup>10</maxPerGroup>
+    <lifeStages>
+      <li>
+        <bodyGraphicData>
+          <texPath>Things/Automatroid/soldat</texPath>
+          <shaderType>CutoutComplex</shaderType>
+          <graphicClass>Graphic_Multi</graphicClass>
+          <drawSize>1.1</drawSize>
+          <color>(200,210,225)</color>
+        </bodyGraphicData>
+      </li>
+      <li>
+        <bodyGraphicData>
+          <texPath>Things/Automatroid/OldTexture/soldat</texPath>
+          <shaderType>CutoutComplex</shaderType>
+          <graphicClass>Graphic_Multi</graphicClass>
+          <drawSize>1.1</drawSize>
+          <color>(200,210,225)</color>
+        </bodyGraphicData>
+      </li>
+    </lifeStages>
+    <weaponTags>
+      <li>Autopistol</li>
+      <li>Revolver</li>
+      <li>DMS_MechWeaponLight</li>
+    </weaponTags>
+    <weaponMoney>150~300</weaponMoney>
+  </PawnKindDef>
+</Defs>

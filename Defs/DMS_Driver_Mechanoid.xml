@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Driver Automatroid - a Soldat-chassis variant from The Dead Man's Switch.
+
+  Design:
+    * ThingDef  DMS_Mech_Driver  inherits BaseMechRace_Soldat (same DMS_Humanoid_Soldat
+      body, armor and move speed as the Soldat) so it is a true DMS automatroid.
+    * The Fortified.MechWeaponExtension is restricted to pistol-class weapon tags
+      (Autopistol, Revolver and the DMS light sidearm tag DMS_MechWeaponLight), so the
+      Driver can only equip basic pistols - exactly as requested.
+    * Driving Vehicle Framework vehicles is handled by the included C# patch in
+      Assemblies/DMS_DriverMechanoid.dll, which lifts VF's hard "IsColonyMech" block for
+      THIS mech only. See README.md for details.
+-->
+<Defs>
+
+  <!-- ============================================================= -->
+  <!--  Race                                                          -->
+  <!-- ============================================================= -->
+  <ThingDef ParentName="BaseMechRace_Soldat">
+    <defName>DMS_Mech_Driver</defName>
+    <label>driver</label>
+    <description>A bipedal humanoid automatroid built on the Soldat chassis and reconfigured by Nara Industries as a vehicle operator. Its cognition core is tuned for piloting tanks and other Vehicle Framework vehicles, and its manipulators are calibrated for sidearm use - it can wield basic autopistols and revolvers but lacks the bracing for heavier arms. Like other Soldat-type units it must carry a battery backpack, so it fights best from cover or from the hatch of a vehicle.</description>
+    <statBases>
+      <BandwidthCost MayRequire="Ludeon.Rimworld.Biotech">1</BandwidthCost>
+      <WastepacksPerRecharge MayRequire="Ludeon.Rimworld.Biotech">2</WastepacksPerRecharge>
+      <MarketValue>1200</MarketValue>
+      <PilotingAbility MayRequire="Ludeon.RimWorld.Odyssey">0.1</PilotingAbility>
+    </statBases>
+    <modExtensions>
+      <!-- Fortified weapon framework: restrict the Driver to basic pistols only. -->
+      <li Class="Fortified.MechWeaponExtension">
+        <EnableWeaponFilter>true</EnableWeaponFilter>
+        <UsableWeaponTags>
+          <li>Autopistol</li>
+          <li>Revolver</li>
+          <li>DMS_MechWeaponLight</li>
+        </UsableWeaponTags>
+        <EnableTechLevelFilter>true</EnableTechLevelFilter>
+        <UsableTechLevels>
+          <li>Neolithic</li>
+          <li>Medieval</li>
+          <li>Industrial</li>
+        </UsableTechLevels>
+        <BypassUsableWeapons/>
+      </li>
+    </modExtensions>
+  </ThingDef>
+
+  <!-- ============================================================= -->
+  <!--  PawnKind                                                      -->
+  <!-- ============================================================= -->
+  <PawnKindDef ParentName="BaseAutomatroidKind">
+    <defName>DMS_Mech_Driver</defName>
+    <label>driver</label>
+    <race>DMS_Mech_Driver</race>
+    <isFighter>true</isFighter>
+    <combatPower>45</combatPower>
+    <maxPerGroup>10</maxPerGroup>
+    <!--
+      Body graphic: reuses the Soldat sprite so the mod ships with a clean, in-style
+      texture and zero broken-mesh errors. To give the Driver its own look, drop
+      driver_south.png / driver_north.png / driver_east.png into
+      Textures/Things/Automatroid/ and change texPath below to Things/Automatroid/driver.
+    -->
+    <lifeStages>
+      <li>
+        <bodyGraphicData>
+          <texPath>Things/Automatroid/soldat</texPath>
+          <shaderType>CutoutComplex</shaderType>
+          <graphicClass>Graphic_Multi</graphicClass>
+          <drawSize>1.1</drawSize>
+        </bodyGraphicData>
+      </li>
+      <li>
+        <bodyGraphicData>
+          <texPath>Things/Automatroid/OldTexture/soldat</texPath>
+          <shaderType>CutoutComplex</shaderType>
+          <graphicClass>Graphic_Multi</graphicClass>
+          <drawSize>1.1</drawSize>
+        </bodyGraphicData>
+      </li>
+    </lifeStages>
+    <!-- weaponTags matter for NPC-spawned drivers (hostile factions); player-gestated
+         drivers are equipped by the player and filtered by MechWeaponExtension above. -->
+    <weaponTags>
+      <li>Autopistol</li>
+      <li>Revolver</li>
+      <li>DMS_MechWeaponLight</li>
+    </weaponTags>
+    <weaponMoney>120~260</weaponMoney>
+  </PawnKindDef>
+
+</Defs>

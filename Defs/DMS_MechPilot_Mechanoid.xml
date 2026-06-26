@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <ThingDef ParentName="BaseMechRace_Soldat">
+    <defName>DMS_Mech_MechPilot</defName>
+    <label>mech pilot</label>
+    <description>A Soldat-chassis automatroid reconfigured as an exosuit operator. Its frame is reinforced to bear the weight of heavy powered armor, and its cognition core is tuned for the fine motor control exosuits demand. It can drive Vehicle Framework vehicles and fire vehicle turrets, and is intended to wear Exosuit Framework apparel (AMP suits, Mobile Dragoon, etc.). Like other Soldat-type units it carries a battery backpack and is restricted to sidearms.</description>
+    <!-- thingClass + renderTree: same as the DMS synth mechs (Maiden/Armiman/BigSister).
+         Fortified.HumanlikeMech handles mech apparel rendering via the HumanlikeMech
+         render tree. The HumanlikeMechExtension provides the headGraphic (required —
+         without it, HumanlikeMech.HeadGraphic NREs on spawn). -->
+    <thingClass>Fortified.HumanlikeMech</thingClass>
+    <inspectorTabs Inherit="False">
+      <li>ITab_Pawn_Health</li>
+      <li>ITab_Pawn_Needs</li>
+      <li>ITab_Pawn_FormingCaravan</li>
+      <li>ITab_Pawn_Gear</li>
+      <li>ITab_Pawn_Log</li>
+    </inspectorTabs>
+    <!-- DMS_Synthroid body has the standard body part groups (Torso, Neck, Shoulders,
+         Waist, Legs) required to wear apparel. DMS_Humanoid_Soldat lacks these. -->
+    <race>
+      <body>DMS_Synthroid</body>
+      <renderTree>HumanlikeMech</renderTree>
+    </race>
+    <statBases>
+      <BandwidthCost MayRequire="Ludeon.Rimworld.Biotech">1</BandwidthCost>
+      <WastepacksPerRecharge MayRequire="Ludeon.Rimworld.Biotech">2</WastepacksPerRecharge>
+      <MoveSpeed>4.0</MoveSpeed>
+      <ArmorRating_Sharp>0.45</ArmorRating_Sharp>
+      <ArmorRating_Blunt>0.25</ArmorRating_Blunt>
+      <ArmorRating_Heat>1.5</ArmorRating_Heat>
+      <MarketValue>1500</MarketValue>
+      <CarryWeight>60</CarryWeight>
+      <CarryBulk>25</CarryBulk>
+    </statBases>
+    <modExtensions>
+      <li Class="Fortified.MechWeaponExtension">
+        <EnableWeaponFilter>true</EnableWeaponFilter>
+        <UsableWeaponTags>
+          <li>Autopistol</li>
+          <li>Revolver</li>
+          <li>DMS_MechWeaponLight</li>
+        </UsableWeaponTags>
+        <EnableTechLevelFilter>true</EnableTechLevelFilter>
+        <UsableTechLevels>
+          <li>Neolithic</li>
+          <li>Medieval</li>
+          <li>Industrial</li>
+          <li>Spacer</li>
+        </UsableTechLevels>
+        <BypassUsableWeapons/>
+      </li>
+      <!-- HumanlikeMechExtension: required by Fortified.HumanlikeMech. The headGraphic
+           reuses the soldat body texture (which includes a head). bodyTypeOverride
+           Male matches the soldat's frame. -->
+      <li Class="Fortified.HumanlikeMechExtension">
+        <bodyTypeOverride>Male</bodyTypeOverride>
+        <headGraphic>
+          <texPath>Things/Automatroid/soldat</texPath>
+          <graphicClass>Graphic_Multi</graphicClass>
+          <drawSize>1.1</drawSize>
+        </headGraphic>
+      </li>
+    </modExtensions>
+    <comps>
+      <li Class="Fortified.CompProperties_MechApparel"/>
+    </comps>
+  </ThingDef>
+
+  <PawnKindDef ParentName="BaseAutomatroidKind">
+    <defName>DMS_Mech_MechPilot</defName>
+    <label>mech pilot</label>
+    <race>DMS_Mech_MechPilot</race>
+    <isFighter>true</isFighter>
+    <combatPower>50</combatPower>
+    <maxPerGroup>10</maxPerGroup>
+    <lifeStages>
+      <li>
+        <bodyGraphicData>
+          <texPath>Things/Automatroid/soldat</texPath>
+          <shaderType>CutoutComplex</shaderType>
+          <graphicClass>Graphic_Multi</graphicClass>
+          <drawSize>1.15</drawSize>
+          <color>(180,160,120)</color>
+        </bodyGraphicData>
+      </li>
+      <li>
+        <bodyGraphicData>
+          <texPath>Things/Automatroid/OldTexture/soldat</texPath>
+          <shaderType>CutoutComplex</shaderType>
+          <graphicClass>Graphic_Multi</graphicClass>
+          <drawSize>1.15</drawSize>
+          <color>(180,160,120)</color>
+        </bodyGraphicData>
+      </li>
+    </lifeStages>
+    <weaponTags>
+      <li>Autopistol</li>
+      <li>Revolver</li>
+      <li>DMS_MechWeaponLight</li>
+    </weaponTags>
+    <weaponMoney>120~260</weaponMoney>
+  </PawnKindDef>
+</Defs>

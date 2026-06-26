@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Gestation recipe for the Driver automatroid.
+
+  Mirrors the Soldat recipe (DMS_Make_Soldat): parent DMS_LegionMechanoidRecipe,
+  built at the DMS_MechGestatorSmall, research DMS_Legion (same tier as the Soldat),
+  1 gestation cycle, 115 steel + 5 industrial components.
+-->
+<Defs>
+
+  <RecipeDef ParentName="DMS_LegionMechanoidRecipe">
+    <defName>DMS_Make_Driver</defName>
+    <label>Gestate Driver</label>
+    <description>Gestate a Driver Automatroid. A Soldat-chassis unit reconfigured as a vehicle operator - it can drive Vehicle Framework vehicles and wield basic pistols.</description>
+    <products>
+      <DMS_Mech_Driver>1</DMS_Mech_Driver>
+    </products>
+    <gestationCycles>1</gestationCycles>
+    <descriptionHyperlinks>
+      <ThingDef>DMS_Mech_Driver</ThingDef>
+    </descriptionHyperlinks>
+    <ingredients Inherit="False">
+      <li>
+        <filter>
+          <thingDefs>
+            <li>Steel</li>
+          </thingDefs>
+        </filter>
+        <count>115</count>
+      </li>
+      <li>
+        <filter>
+          <thingDefs>
+            <li>ComponentIndustrial</li>
+          </thingDefs>
+        </filter>
+        <count>5</count>
+      </li>
+    </ingredients>
+  </RecipeDef>
+
+</Defs>

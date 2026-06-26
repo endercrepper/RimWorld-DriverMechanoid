@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+  <name>Driver Automatroid (DMS Add-on)</name>
+  <author>YourName</author>
+  <packageId>yourname.dms.drivermech</packageId>
+  <supportedVersions>
+    <li>1.4</li>
+    <li>1.5</li>
+    <li>1.6</li>
+  </supportedVersions>
+  <description>A new Nara Industries automatroid - the Driver - built on the Soldat chassis from The Dead Man's Switch.
+
+The Driver is a light, versatile support mechanoid that:
+  * Wields basic sidearms (autopistols and revolvers) through the Fortified weapon framework.
+  * Can be gestated at the DMS mech gestator and controlled by a mechanitor.
+  * Is cleared to operate Vehicle Framework vehicles - it can drive tanks and crew vehicle turrets (requires the included C# compatibility patch, which lifts Vehicle Framework's hard block on colony mechanoids operating vehicle roles, for this mech only).
+
+Based on the Soldat mechanoid from "The Dead Man's Switch". Load this mod after DMS, Vehicle Framework and Harmony.
+
+Requires: Biotech, Fortified Feature Framework, The Dead Man's Switch, Vehicle Framework, Harmony.</description>
+  <modDependenciesByVersion>
+    <v1.4>
+      <li>
+        <packageId>brrainz.harmony</packageId>
+        <displayName>Harmony</displayName>
+        <downloadUrl>https://github.com/pardeike/HarmonyRimWorld/releases/latest</downloadUrl>
+        <steamWorkshopUrl>https://steamcommunity.com/workshop/filedetails/?id=2009463077</steamWorkshopUrl>
+      </li>
+      <li>
+        <packageId>ludeon.rimworld.biotech</packageId>
+        <displayName>Biotech</displayName>
+      </li>
+      <li>
+        <packageId>OskarPotocki.VanillaFactionsExpanded.Core</packageId>
+        <displayName>Vanilla Expanded Framework</displayName>
+        <steamWorkshopUrl>https://steamcommunity.com/workshop/filedetails/?id=2023507013</steamWorkshopUrl>
+      </li>
+      <li>
+        <packageId>Aoba.DeadManSwitch.Core</packageId>
+        <displayName>The Dead Man's Switch</displayName>
+        <steamWorkshopUrl>https://steamcommunity.com/workshop/filedetails/?id=3121742525</steamWorkshopUrl>
+      </li>
+      <li>
+        <packageId>SmashPhil.VehicleFramework</packageId>
+        <displayName>Vehicle Framework</displayName>
+        <steamWorkshopUrl>https://steamcommunity.com/workshop/filedetails/?id=3014915404</steamWorkshopUrl>
+      </li>
+    </v1.4>
+    <v1.5>
+      <li>
+        <packageId>brrainz.harmony</packageId>
+        <displayName>Harmony</displayName>
+        <downloadUrl>https://github.com/pardeike/HarmonyRimWorld/releases/latest</downloadUrl>
+        <steamWorkshopUrl>https://steamcommunity.com/workshop/filedetails/?id=2009463077</steamWorkshopUrl>
+      </li>
+      <li>
+        <packageId>ludeon.rimworld.biotech</packageId>
+        <displayName>Biotech</displayName>
+      </li>
+      <li>
+        <packageId>OskarPotocki.VanillaFactionsExpanded.Core</packageId>
+        <displayName>Vanilla Expanded Framework</displayName>
+        <steamWorkshopUrl>https://steamcommunity.com/workshop/filedetails/?id=2023507013</steamWorkshopUrl>
+      </li>
+      <li>
+        <packageId>Aoba.DeadManSwitch.Core</packageId>
+        <displayName>The Dead Man's Switch</displayName>
+        <steamWorkshopUrl>https://steamcommunity.com/workshop/filedetails/?id=3121742525</steamWorkshopUrl>
+      </li>
+      <li>
+        <packageId>SmashPhil.VehicleFramework</packageId>
+        <displayName>Vehicle Framework</displayName>
+        <steamWorkshopUrl>https://steamcommunity.com/workshop/filedetails/?id=3014915404</steamWorkshopUrl>
+      </li>
+    </v1.5>
+    <v1.6>
+      <li>
+        <packageId>brrainz.harmony</packageId>
+        <displayName>Harmony</displayName>
+        <downloadUrl>https://github.com/pardeike/HarmonyRimWorld/releases/latest</downloadUrl>
+        <steamWorkshopUrl>https://steamcommunity.com/workshop/filedetails/?id=2009463077</steamWorkshopUrl>
+      </li>
+      <li>
+        <packageId>ludeon.rimworld.biotech</packageId>
+        <displayName>Biotech</displayName>
+      </li>
+      <li>
+        <packageId>AOBA.Framework</packageId>
+        <displayName>Fortified Feature Framework</displayName>
+        <steamWorkshopUrl>https://steamcommunity.com/sharedfiles/filedetails/?id=3498575851</steamWorkshopUrl>
+      </li>
+      <li>
+        <packageId>Aoba.DeadManSwitch.Core</packageId>
+        <displayName>The Dead Man's Switch</displayName>
+        <steamWorkshopUrl>https://steamcommunity.com/workshop/filedetails/?id=3121742525</steamWorkshopUrl>
+      </li>
+      <li>
+        <packageId>SmashPhil.VehicleFramework</packageId>
+        <displayName>Vehicle Framework</displayName>
+        <steamWorkshopUrl>https://steamcommunity.com/workshop/filedetails/?id=3014915404</steamWorkshopUrl>
+      </li>
+    </v1.6>
+  </modDependenciesByVersion>
+  <loadAfter>
+    <li>brrainz.harmony</li>
+    <li>OskarPotocki.VanillaFactionsExpanded.Core</li>
+    <li>AOBA.Framework</li>
+    <li>Aoba.DeadManSwitch.Core</li>
+    <li>SmashPhil.VehicleFramework</li>
+  </loadAfter>
+</ModMetaData>

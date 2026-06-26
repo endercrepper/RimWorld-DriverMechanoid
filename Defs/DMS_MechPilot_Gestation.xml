@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Mech Pilot: DMS_BattleFrame research (the "Battle Friends" exoskeleton-frame tier),
+     2 cycles, 280 steel + 12 industrial + 1 ComponentTransmitter (DMS T/R component). -->
+<Defs>
+  <RecipeDef ParentName="DMS_HeavyMechanoidRecipe">
+    <defName>DMS_Make_MechPilot</defName>
+    <label>Gestate Mech Pilot</label>
+    <description>Gestate a Mech Pilot Automatroid. A reinforced Soldat-chassis unit intended to wear Exosuit Framework apparel. Can drive Vehicle Framework vehicles and fire vehicle turrets; wields basic pistols.</description>
+    <products>
+      <DMS_Mech_MechPilot>1</DMS_Mech_MechPilot>
+    </products>
+    <gestationCycles>2</gestationCycles>
+    <descriptionHyperlinks>
+      <ThingDef>DMS_Mech_MechPilot</ThingDef>
+    </descriptionHyperlinks>
+    <ingredients Inherit="False">
+      <li>
+        <filter><thingDefs><li>Steel</li></thingDefs></filter>
+        <count>280</count>
+      </li>
+      <li>
+        <filter><thingDefs><li>ComponentIndustrial</li></thingDefs></filter>
+        <count>12</count>
+      </li>
+      <li>
+        <filter><thingDefs><li>ComponentTransmitter</li></thingDefs></filter>
+        <count>1</count>
+      </li>
+    </ingredients>
+  </RecipeDef>
+</Defs>

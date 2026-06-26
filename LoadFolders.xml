@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  LoadFolders - mirrors the gating convention used by The Dead Man's Switch.
+
+  The root "/" folder (About, Defs, Assemblies, ...) always loads.
+  The Patches/CE folder only loads when Combat Extended is active, so the CE
+  loadout patch below cannot fire (and cannot error) without CE installed.
+
+  CE ships under two packageIds depending on source (Steam vs GitHub), so we
+  accept either - exactly like DMS does.
+-->
+<loadFolders>
+  <v1.4>
+    <li>/</li>
+    <li IfModActive="CETeam.CombatExtended,CETeam.CombatExtended_steam">Patches/CE</li>
+  </v1.4>
+  <v1.5>
+    <li>/</li>
+    <li IfModActive="CETeam.CombatExtended,CETeam.CombatExtended_steam">Patches/CE</li>
+  </v1.5>
+  <v1.6>
+    <li>/</li>
+    <li IfModActive="CETeam.CombatExtended,CETeam.CombatExtended_steam">Patches/CE</li>
+  </v1.6>
+</loadFolders>

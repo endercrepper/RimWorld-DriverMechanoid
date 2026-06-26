@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Combat Extended patch for the Driver automatroid.
+
+  WHAT'S ALREADY COVERED (no patch needed)
+  =======================================
+  DMS's own CE patch (1.6/CE/Patches/Pawns/Automatroid_Medium_Soldat_CE.xml)
+  targets the ABSTRACT ThingDef[@Name="BaseMechRace_Soldat"]. Because
+  DMS_Mech_Driver inherits BaseMechRace_Soldat, all of the following CE work
+  flows through to the Driver automatically:
+
+    * Armor re-scale            -> ArmorRating_Blunt 8 / Sharp 6 / Heat 0.1
+    * CE carry/aim stats        -> CarryWeight 50, CarryBulk 20, AimingAccuracy 0.75,
+                                   ShootingAccuracyPawn 1, NightVisionEfficiency 0.5,
+                                   MaxHitPoints 200, melee dodge/crit/parry
+    * CompProperties_ArmorDurability -> Durability 790, regen + Steel repair, over-heal
+
+  WHAT THIS PATCH ADDS (the gap)
+  ==============================
+  DMS's CE patch adds the CombatExtended ammo/loadout extension to specific
+  PawnKindDefs BY DEFNAME (DMS_Mech_Soldat, DMS_Mech_Sergeant, ...). DMS_Mech_Driver
+  is not in that list, so without this patch NPC-spawned Drivers would generate
+  with no CE ammo loadout. This patch:
+
+    1. Adds CombatExtended.LoadoutPropertiesExtension to DMS_Mech_Driver so
+       NPC Drivers spawn carrying magazines for their pistol (4-6 mags, matching
+       the Soldat's primaryMagazineCount) plus a DMS_MechWeaponLight sidearm with
+       its own ammo.
+    2. Bumps combatPower to 80 to match the CE-scaled Soldat (threat-point parity).
+-->
+<Patch>
+
+  <Operation Class="PatchOperationSequence">
+    <operations>
+
+      <!-- ===== PawnKindDef: CE loadout + ammo (all three Driver variants) ===== -->
+      <li Class="PatchOperationAddModExtension">
+        <xpath>Defs/PawnKindDef[defName="DMS_Mech_Driver" or defName="DMS_Mech_AdvDriver" or defName="DMS_Mech_MechPilot"]</xpath>
+        <value>
+          <li Class="CombatExtended.LoadoutPropertiesExtension">
+            <!-- Primary pistol magazines -->
+            <primaryMagazineCount>
+              <min>4</min>
+              <max>6</max>
+            </primaryMagazineCount>
+            <!-- Backup sidearm (DMS light sidearm class) + its own mags -->
+            <forcedSidearm>
+              <sidearmMoney>
+                <min>120</min>
+                <max>260</max>
+              </sidearmMoney>
+              <weaponTags>
+                <li>DMS_MechWeaponLight</li>
+                <li>Autopistol</li>
+              </weaponTags>
+              <magazineCount>
+                <min>2</min>
+                <max>4</max>
+              </magazineCount>
+            </forcedSidearm>
+          </li>
+        </value>
+      </li>
+
+      <!-- ===== PawnKindDef: CE-scaled combat power (all three variants) ===== -->
+      <li Class="PatchOperationReplace">
+        <xpath>Defs/PawnKindDef[defName="DMS_Mech_Driver" or defName="DMS_Mech_AdvDriver" or defName="DMS_Mech_MechPilot"]/combatPower</xpath>
+        <value>
+          <combatPower>80</combatPower>
+        </value>
+      </li>
+
+    </operations>
+  </Operation>
+
+</Patch>

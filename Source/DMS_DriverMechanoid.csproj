@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- RimWorld (1.4/1.5/1.6) runs on the Mono / .NET Framework 4.7.2 runtime, so a
+         single net48 assembly loads on every supported version. -->
+    <TargetFramework>net48</TargetFramework>
+    <AssemblyName>DMS_DriverMechanoid</AssemblyName>
+    <RootNamespace>DMS_DriverMechanoid</RootNamespace>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <!-- Only the mod DLL should land in the output. RimWorld + Harmony come from the
+         game / brrainz.harmony at runtime, so don't copy any dependency assemblies. -->
+    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+    <RestoreAdditionalProjectSources>
+      https://api.nuget.org/v3/index.json
+    </RestoreAdditionalProjectSources>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <Version>1.0.0</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- .NET Framework 4.8 reference assemblies (builds without a Mono/full-framework install). -->
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+    <!-- RimWorld reference assemblies (1.6; types used are stable across 1.4-1.6). ref-only package. -->
+    <PackageReference Include="Krafs.RimWorld.Ref" Version="1.6.4850" PrivateAssets="all" ExcludeAssets="runtime" />
+    <!-- Harmony (provided at runtime by brrainz.harmony). -->
+    <PackageReference Include="Lib.Harmony" Version="2.3.5" PrivateAssets="all" ExcludeAssets="runtime" />
+  </ItemGroup>
+
+</Project>

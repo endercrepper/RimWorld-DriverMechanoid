@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <RecipeDef ParentName="DMS_HumanoidMechanoidRecipe">
+    <defName>DMS_Make_AdvDriver</defName>
+    <label>Gestate Advanced Driver</label>
+    <description>Gestate an Advanced Driver Automatroid. An upgraded Soldat-chassis unit with enhanced vehicle-handling cognition and gravship-pilot certification. Can drive Vehicle Framework vehicles, fire vehicle turrets, and pilot gravships; wields basic pistols.</description>
+    <products>
+      <DMS_Mech_AdvDriver>1</DMS_Mech_AdvDriver>
+    </products>
+    <gestationCycles>3</gestationCycles>
+    <descriptionHyperlinks>
+      <ThingDef>DMS_Mech_AdvDriver</ThingDef>
+    </descriptionHyperlinks>
+    <ingredients Inherit="False">
+      <li>
+        <filter><thingDefs><li>Steel</li></thingDefs></filter>
+        <count>250</count>
+      </li>
+      <li>
+        <filter><thingDefs><li>ComponentIndustrial</li></thingDefs></filter>
+        <count>12</count>
+      </li>
+      <li>
+        <filter><thingDefs><li>ComponentStamped</li></thingDefs></filter>
+        <count>4</count>
+      </li>
+      <li>
+        <filter><thingDefs><li>ComponentSpacer</li></thingDefs></filter>
+        <count>2</count>
+      </li>
+    </ingredients>
+  </RecipeDef>
+</Defs>
