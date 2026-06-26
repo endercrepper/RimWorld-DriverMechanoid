@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using HarmonyLib;
@@ -595,14 +596,35 @@ namespace DMS_DriverMechanoid
 
         /// <summary>
         ///   Prefix for Pawn_ApparelTracker.TryDrop and Remove.
-        ///   Blocks removal of exosuit apparel from the Mech Pilot — the exosuit
-        ///   should only be removable via the EjectorBay, not stripped or dropped.
+        ///   Blocks removal of exosuit apparel from the Mech Pilot via player stripping,
+        ///   BUT allows removal when called from RemoveExosuit (the EjectorBay path).
+        ///   We detect the EjectorBay path by checking the call stack for
+        ///   Exosuit.RemoveExosuit or Exosuit.Building_EjectorBay.
         /// </summary>
         public static bool ApparelTryDrop_Remove_Prefix(Pawn_ApparelTracker __instance, Apparel ap)
         {
             if (__instance == null || ap == null) return true;
             Pawn pawn = __instance.pawn;
             if (pawn == null || pawn.def == null || pawn.def.defName != "DMS_Mech_MechPilot") return true;
+
+            // Allow removal if called from the exosuit framework's RemoveExosuit
+            // (used by the EjectorBay to properly strip the suit).
+            try
+            {
+                StackTrace st = new StackTrace();
+                for (int i = 0; i < Math.Min(st.FrameCount, 15); i++)
+                {
+                    MethodBase m = st.GetFrame(i).GetMethod();
+                    if (m == null) continue;
+                    string name = m.Name;
+                    string typeName = m.DeclaringType?.FullName ?? "";
+                    // RemoveExosuit is the extension method that EjectorBay.GearDown calls.
+                    if (name == "RemoveExosuit" && typeName.Contains("Exosuit")) return true;
+                    // Also allow if called directly from Building_EjectorBay or Building_MaintenanceBay.
+                    if (typeName.Contains("Building_EjectorBay") || typeName.Contains("Building_MaintenanceBay")) return true;
+                }
+            }
+            catch { }
 
             Type exosuitCoreType = AccessTools.TypeByName("Exosuit.Exosuit_Core");
             if (exosuitCoreType == null) return true;
