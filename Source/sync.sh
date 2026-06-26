@@ -9,7 +9,7 @@ MSG="${1:-auto-sync: update mod files}"
 
 if [ -z "${GH_TOKEN:-}" ]; then
   echo "ERROR: Set GH_TOKEN env var first." >&2
-  echo "  export GH_TOKEN=github_pat_..." >&2
+  echo "  export GH_TOKEN=<your_personal_access_token>" >&2
   exit 1
 fi
 
