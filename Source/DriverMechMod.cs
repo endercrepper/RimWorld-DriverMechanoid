@@ -210,6 +210,24 @@ namespace DMS_DriverMechanoid
                         nameof(DriverPatches.ShouldAddNodeToTree_Postfix)));
                     Log.Message("[DMS Driver Mechanoid] Patched ShouldAddNodeToTree (force exosuit render nodes for Mech Pilot).");
                 }
+
+                // THE KEY FIX: DynamicPawnRenderNodeSetup_Apparel.HumanlikeOnly returns
+                // true, which means vanilla NEVER creates apparel render nodes for
+                // mechanoids (HumanlikeMech is still IsMechanoid). Patch the property
+                // getter to return false for HumanlikeMech pawns so apparel render nodes
+                // ARE created. Without this, no amount of ShouldAddNodeToTree patching
+                // helps — the nodes simply don't exist.
+                Type apparelSetupType = AccessTools.TypeByName("Verse.DynamicPawnRenderNodeSetup_Apparel");
+                if (apparelSetupType != null)
+                {
+                    MethodInfo humanlikeOnlyGetter = AccessTools.Property(apparelSetupType, "HumanlikeOnly")?.GetGetMethod(nonPublic: true);
+                    if (humanlikeOnlyGetter != null)
+                    {
+                        harmony.Patch(humanlikeOnlyGetter, postfix: new HarmonyMethod(typeof(DriverPatches),
+                            nameof(DriverPatches.ApparelHumanlikeOnly_Postfix)));
+                        Log.Message("[DMS Driver Mechanoid] Patched DynamicPawnRenderNodeSetup_Apparel.HumanlikeOnly (apparel render nodes created for Mech Pilot).");
+                    }
+                }
             }
             catch (Exception e) { Log.Warning($"[DMS Driver Mechanoid] Exosuit patch skipped: {e.Message}"); }
         }
@@ -517,6 +535,27 @@ namespace DMS_DriverMechanoid
                 catch { }
             }
             return false;
+        }
+
+        // ---- Force apparel render nodes for Mech Pilot (HumanlikeOnly bypass) ----
+
+        /// <summary>
+        ///   Postfix for <c>DynamicPawnRenderNodeSetup_Apparel.HumanlikeOnly</c>.
+        ///   Vanilla returns true, meaning apparel render nodes are never created for
+        ///   mechanoids. We force it to false so the render tree creates apparel nodes
+        ///   for the Mech Pilot (a HumanlikeMech mechanoid). This is a global override
+        ///   — the property is checked during render tree setup, and the pawn being
+        ///   set up is the one whose render tree is being built.
+        /// </summary>
+        public static void ApparelHumanlikeOnly_Postfix(ref bool __result)
+        {
+            // We can't directly access the pawn here (it's a property getter with no
+            // pawn parameter). But this is only called during render tree setup, and
+            // forcing it false globally is safe — it just means "create apparel render
+            // nodes for all pawns, not just humanlikes". For non-mech pawns this is
+            // already true (they're humanlike), and for mechs that can't wear apparel
+            // it's a no-op (no apparel to create nodes for).
+            __result = false;
         }
 
         // ---- Force exosuit render nodes for Mech Pilot ----
