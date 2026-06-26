@@ -212,6 +212,16 @@ namespace DMS_DriverMechanoid
                     Log.Message("[DMS Driver Mechanoid] Patched ShouldAddNodeToTree (force exosuit render nodes for Mech Pilot).");
                 }
 
+                // Patch FloatMenuMakerMap.ShouldGenerateFloatMenuForPawn so the Mech Pilot
+                // gets float menu options when right-clicking buildings (EjectorBay, etc.).
+                MethodInfo shouldGen = AccessTools.Method(typeof(FloatMenuMakerMap), "ShouldGenerateFloatMenuForPawn");
+                if (shouldGen != null)
+                {
+                    harmony.Patch(shouldGen, postfix: new HarmonyMethod(typeof(DriverPatches),
+                        nameof(DriverPatches.ShouldGenerateFloatMenuForPawn_Postfix)));
+                    Log.Message("[DMS Driver Mechanoid] Patched ShouldGenerateFloatMenuForPawn (Mech Pilot gets float menus).");
+                }
+
                 // THE KEY FIX: DynamicPawnRenderNodeSetup_Apparel.HumanlikeOnly returns
                 // true, which means vanilla NEVER creates apparel render nodes for
                 // mechanoids (HumanlikeMech is still IsMechanoid). Patch the property
@@ -536,6 +546,22 @@ namespace DMS_DriverMechanoid
                 catch { }
             }
             return false;
+        }
+
+        // ---- Force float menu for Mech Pilot (right-click building interactions) ----
+
+        /// <summary>
+        ///   Postfix for FloatMenuMakerMap.ShouldGenerateFloatMenuForPawn. Vanilla may
+        ///   reject mechanoids, preventing right-click float menus from appearing when
+        ///   a mech is selected and a building is right-clicked. Force-allow for the
+        ///   Mech Pilot so the EjectorBay "Enter" option shows up.
+        /// </summary>
+        public static void ShouldGenerateFloatMenuForPawn_Postfix(Pawn pawn, ref AcceptanceReport __result)
+        {
+            if (__result.Accepted) return;
+            if (pawn == null || pawn.def == null || pawn.def.defName != "DMS_Mech_MechPilot") return;
+            if (pawn.Downed || pawn.Dead) return;
+            __result = AcceptanceReport.WasAccepted;
         }
 
         // ---- Force apparel render nodes for Mech Pilot (HumanlikeOnly bypass) ----
