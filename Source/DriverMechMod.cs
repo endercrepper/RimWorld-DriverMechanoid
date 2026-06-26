@@ -197,6 +197,19 @@ namespace DMS_DriverMechanoid
                     harmony.Patch(remove, prefix: new HarmonyMethod(typeof(DriverPatches), nameof(DriverPatches.ApparelTryDrop_Remove_Prefix)));
                 }
                 Log.Message("[DMS Driver Mechanoid] Patched TryDrop + Remove (block exosuit removal from Mech Pilot).");
+
+                // Force exosuit render nodes to be added to the Mech Pilot's render tree.
+                // The exosuit framework uses custom render node tags (WGApparel,
+                // WGApparelBody, WGApparelHead) that ShouldAddNodeToTree may reject
+                // for non-standard render trees. This postfix forces them through.
+                MethodInfo shouldAdd = AccessTools.Method(AccessTools.TypeByName("Verse.PawnRenderTree"),
+                    "ShouldAddNodeToTree", new[] { AccessTools.TypeByName("Verse.PawnRenderNodeProperties") });
+                if (shouldAdd != null)
+                {
+                    harmony.Patch(shouldAdd, postfix: new HarmonyMethod(typeof(DriverPatches),
+                        nameof(DriverPatches.ShouldAddNodeToTree_Postfix)));
+                    Log.Message("[DMS Driver Mechanoid] Patched ShouldAddNodeToTree (force exosuit render nodes for Mech Pilot).");
+                }
             }
             catch (Exception e) { Log.Warning($"[DMS Driver Mechanoid] Exosuit patch skipped: {e.Message}"); }
         }
@@ -504,6 +517,39 @@ namespace DMS_DriverMechanoid
                 catch { }
             }
             return false;
+        }
+
+        // ---- Force exosuit render nodes for Mech Pilot ----
+
+        /// <summary>
+        ///   Postfix for PawnRenderTree.ShouldAddNodeToTree. If the pawn is the Mech
+        ///   Pilot and the node's tag is one of the exosuit framework's custom tags
+        ///   (WGApparel, WGApparelBody, WGApparelHead), force the result to true so
+        ///   the exosuit render nodes are added to the render tree and the apparel
+        ///   becomes visible.
+        /// </summary>
+        public static void ShouldAddNodeToTree_Postfix(object __instance, ref bool __result, object props)
+        {
+            if (__result) return; // already adding — nothing to do
+
+            try
+            {
+                // Get the pawn from the render tree instance.
+                Pawn pawn = AccessTools.Field(__instance.GetType(), "pawn")?.GetValue(__instance) as Pawn;
+                if (pawn == null || pawn.def == null || pawn.def.defName != "DMS_Mech_MechPilot") return;
+
+                // Get the node's tagDef from the props.
+                object tagDef = AccessTools.Field(props.GetType(), "tagDef")?.GetValue(props);
+                if (tagDef == null) return;
+                string tagDefName = tagDef.ToString();
+
+                // Check if it's one of the exosuit framework's custom render tags.
+                if (tagDefName == "WGApparel" || tagDefName == "WGApparelBody" || tagDefName == "WGApparelHead")
+                {
+                    __result = true;
+                }
+            }
+            catch { /* best-effort */ }
         }
 
         // ---- Prevent exosuit removal from Mech Pilot ----
